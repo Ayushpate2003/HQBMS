@@ -52,14 +52,16 @@ hqbms/
 ## Key Infrastructure Components
 
 - **`docker-compose.yml`**: Defines the self-hosted environment, including:
-  - `supabase-db` (PostgreSQL + pgvector)
+  - `supabase-db` (PostgreSQL 15 + pgvector)
   - `supabase-auth` (GoTrue)
-  - `supabase-realtime`
-  - `supabase-storage`
-  - `redis` (Upstash compatible image)
-  - `next-app` (Frontend)
-  - `ml-service` (FastAPI)
-  - `ollama` (Local LLM daemon loading `llama3` and `nomic-embed-text`)
+  - `supabase-realtime` (Phoenix channels)
+  - `supabase-storage` (S3-compatible API)
+  - `redis` (7-alpine, Moving average cache)
+  - `next-app` (Frontend + API routes, port 3000)
+  - `ml-service` (FastAPI + RAG, port 8000)
+  - `ollama` (Local LLM daemon `llama3:8b` and `nomic-embed-text`)
   - `novu` (Notification worker stack)
+  - `grafana` & `prometheus`
+  - `traefik` (Reverse proxy + TLS)
 
 - **`supabase/migrations/`**: Vital directory containing all transactional schema setups. Must be applied via `supabase db push` prior to starting the application logic services.

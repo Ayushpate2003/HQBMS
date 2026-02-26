@@ -32,8 +32,8 @@ A comprehensive open-source observability stack is packaged alongside the applic
 - **Error Tracking (GlitchTip):** An open-source Sentry alternative. Captures all uncaught exceptions across the frontend and microservices for rapid triage.
 
 ## 4. CI / CD Pipeline
-- **GitHub Actions:** Runs on every PR. Executes unit tests, `eslint`, `black` formatting, and builds the Next.js/FastAPI Docker images.
-- **Trivy Scanner:** Scans Docker images for CVEs before pushing to the private registry.
+- **GitHub Actions:** Runs on every PR. Executes unit tests (Jest, Pytest), `eslint`, `black`/`flake8` formatting, and builds the Next.js/FastAPI Docker images.
+- **Trivy Scanner:** Scans Docker images for CVEs before pushing to the private registry. Fails on CRITICAL severity.
 - **ArgoCD:** Monitors the target branch and automatically deploys the updated Helm charts/manifests to the K3s cluster.
 - **Automated Backups:** A secondary GitHub Action runs daily, executing `pg_dump` and pushing encrypted archives to an S3-compatible offsite bucket (e.g., Backblaze B2/MinIO).
 

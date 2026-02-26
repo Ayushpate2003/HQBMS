@@ -37,7 +37,7 @@ HQBMS is structured around role-based access control (RBAC). The information arc
 ### 2.6 State Admin Dashboard
 - **State Overview** (`/state`) - Aggregated multi-hospital occupancy by municipality.
 - **Hospital Drill-down** (`/state/hospital/[id]`) - Read-only view into a specific hospital's aggregated stats.
-- **Global Reports** (`/state/reports`) - State-wide trend analysis and PDF export.
+- **Global Reports** (`/state/reports`) - (Post-MVP) State-wide trend analysis and PDF export.
 
 ## 3. Data Entities & Relationships (High-Level)
 - **Health Units (Hospitals/Clinics):** The top-level hierarchy enclosing Departments and Beds.

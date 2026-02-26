@@ -22,8 +22,9 @@ The moving average engine reacts instantly to real-world pacing (e.g., a doctor 
 
 ### Calculation
 ```js
-function estimate_wait(position) {
-  return (position * current_avg_duration_in_seconds) / 60; // Result in minutes
+async function estimateWait(deptId, position) {
+  const avg = await redis.get(`queue:${deptId}:avg`) || 600; // 10min fallback
+  return Math.round(position * avg / 60); // return minutes
 }
 ```
 

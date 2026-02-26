@@ -13,9 +13,9 @@ The Minimum Viable Product (MVP) isolates the core 70% of features required to o
 
 ### 2.2 Outpatient Queue Management
 - Public QR-code self-check-in web forms.
-- Hybrid Wait Time Estimates (Redis Moving Average + Scikit-Learn GBDT).
-- Live position tracking viewable on patient smartphones.
-- SMS notifications indicating queue progress (e.g., "You are position 3").
+- Hybrid Wait Time Estimates (Redis Moving Average + Scikit-Learn GBDT/RF).
+- Live position tracking viewable on patient smartphones using Supabase Realtime.
+- SMS notifications indicating queue progress (e.g., "You are position 3") via Novu+Termii.
 
 ### 2.3 System & Analytics
 - Role-Based Access Control (RBAC) via Supabase GoTrue.

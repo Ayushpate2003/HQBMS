@@ -139,6 +139,16 @@ $$;
 PostgreSQL triggers automatically write to an `audit_logs` table upon any modification, ensuring full compliance tracing without requiring application-level logic.
 
 ```sql
+CREATE TABLE audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id),
+  action TEXT NOT NULL,
+  entity TEXT NOT NULL,
+  entity_id UUID NOT NULL,
+  old_json JSONB,
+  new_json JSONB,
+  ts TIMESTAMPTZ DEFAULT now()
+);
 CREATE OR REPLACE FUNCTION log_bed_changes()
 RETURNS TRIGGER AS $$ BEGIN
   INSERT INTO audit_logs(user_id, action, entity, entity_id, old_json, new_json, ts)
@@ -148,4 +158,21 @@ END; $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 CREATE TRIGGER bed_audit AFTER UPDATE ON beds
   FOR EACH ROW EXECUTE FUNCTION log_bed_changes();
+```
+
+## 5. Indexing Strategy
+```sql
+-- Beds: frequent occupancy filter
+CREATE INDEX idx_beds_unit_status ON beds(unit_id, status);
+
+-- Admissions: current occupants (partial index)
+CREATE INDEX idx_admissions_active ON admissions(bed_id)
+  WHERE discharged_at IS NULL;
+
+-- Queue: active queue per department (partial index)
+CREATE INDEX idx_queue_active ON queue_entries(dept_id, registered_at)
+  WHERE ended_at IS NULL;
+
+-- Audit logs: compliance queries
+CREATE INDEX idx_audit_entity ON audit_logs(entity, entity_id, ts DESC);
 ```

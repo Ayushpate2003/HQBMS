@@ -21,6 +21,7 @@ Utilizes `Playwright` to test critical user journeys visually:
 1. **The Check-in Flow:** Navigating to `/checkin`, filling the React Hook Form, submitting, and verifying generation of Token A47 on the patient dashboard.
 2. **The Clinical Admission Flow:** Logging in as Nurse Priya, clicking a green bed, submitting an admission, and verifying the bed turns red.
 3. **The Queue Progression:** Logging in as Doctor Lee, clicking "Call Next", and verifying the Wait Time on the mock patient's browser instantly decreases.
+4. **Integration Journey:** Full patient flow (checkin → queue → SMS → ML estimate → RAG query).
 
 ## 4. Machine Learning Evaluation
 The Wait Time model (GBDT/Random Forest) is evaluated programmatically on every retraining cycle (Sunday 2AM).

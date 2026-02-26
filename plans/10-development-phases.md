@@ -26,9 +26,9 @@ The MVP is developed over a tight 9-day schedule consisting of 3 tightly scoped 
 **Goal:** Deploy the Python AI satellites to enhance the queue with predictive modeling and equip staff with the SOP assistant.
 
 ### Key Deliverables:
-1. **AI Microservice:** Build the FastAPI container structure.
-2. **GBDT Training:** Script the `scikit-learn` pipeline (`train.py`) to pull historical `queue_entries`, train the model, and pickle it.
+1. **AI Microservice:** Build the `ml_service` FastAPI container structure serving on port 8000.
+2. **GBDT Training:** Script the `scikit-learn` pipeline (`train.py`) to pull historical `queue_entries`, engineer 8 features, train the model, and pickle it.
 3. **Hybrid Inference API:** Expose the `/predict/waittime` endpoint blending ML and Redis moving average data.
-4. **pgvector Integration:** Map the `documents` table and write the HNSW index and `match_documents` RPC.
+4. **pgvector Integration:** Map the `documents` table and write the HNSW index and `match_documents` RPC. Build `/rag/ingest`.
 5. **RAG Workflow:** Integrate LangChain and localized Ollama (`llama3:8b`, `nomic-embed-text`) into the `/rag/query` endpoint and expose the Next.js chatbot widget to staff.
-6. **Notifications:** Hook `pg_net` threshold triggers into Novu for state/admin alerting.
+6. **Production Readiness:** Hook `check_occupancy_threshold` PG triggers into Novu alerts. Set up Grafana, Prometheus, Loki. Configure CI/CD pipeline (GitHub Actions + ArgoCD).

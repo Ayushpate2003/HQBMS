@@ -4,19 +4,19 @@
 The system utilizes a **majestic monolith + AI satellites** pattern. The core of HQBMS is a monolithic frontend/backend hybrid inside Next.js, built heavily relying on a self-hosted Supabase instance for database (PostgreSQL 15), authentication, real-time messaging, and storage. Computationally heavy or specialized workloads (ML, LLM RAG) run as stateless microservices.
 
 ## 2. Global Architecture Stack
-- **Frontend / API:** Next.js 14 (App Router)
+- **Frontend Framework:** Next.js 14 (App Router)
 - **UI & Styling:** Tailwind CSS + shadcn/ui + Apache ECharts
 - **Core Backend:** Supabase (Self-hosted via Docker Compose)
   - **Database:** PostgreSQL 15 + pgvector
-  - **Auth:** Supabase GoTrue (JWT)
-  - **Real-Time:** Supabase Realtime (Phoenix Channels)
-  - **Storage:** Supabase Storage
-- **Caching & Quick State:** Redis (Moving Average Queue computation)
+  - **Auth:** Supabase GoTrue (JWT + RBAC via custom claims)
+  - **Real-Time:** Supabase Realtime (Phoenix Channels via CDC)
+  - **Storage:** Supabase Storage (S3-compatible)
+- **Caching & Quick State:** Redis (Upstash) - Moving Average Queue computation
 - **ML / AI Microservice:** Python FastAPI
   - **Models:** scikit-learn (GBDT/RF)
-  - **RAG:** LangChain + pgvector + Ollama (llama3:8b, nomic-embed-text)
-- **Notifications:** Novu (Email / SMS)
-- **Infrastructure:** Docker, Traefik (Gateway), Prometheus + Grafana (Monitoring)
+  - **RAG:** LangChain + pgvector + self-hosted Ollama (LLaMA3 + nomic-embed-text)
+- **Notifications:** Novu (self-hosted) + Termii/MSG91 (SMS Gateway)
+- **Infrastructure:** Docker Compose (dev) → K3s (production), Traefik (Gateway), Prometheus + Grafana (Metrics), Loki (Logs), GlitchTip (Error Tracking)
 
 ## 3. Layer Detail & Interactions
 

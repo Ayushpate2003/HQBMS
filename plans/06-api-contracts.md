@@ -6,10 +6,12 @@ The application utilizes Supabase's auto-generated PostgREST APIs for standard C
 
 | Method | Endpoint | Description | Auth Requirement |
 |---|---|---|---|
-| `GET` | `/rest/v1/beds?unit_id=eq.{id}` | Fetch beds for a unit | Valid JWT (RLS enforced) |
-| `PATCH`| `/rest/v1/beds?id=eq.{id}` | Update bed status | Valid JWT (Staff/Admin) |
-| `POST` | `/rest/v1/admissions` | Create new admission | Valid JWT (Staff) |
-| `GET` | `/rest/v1/beds/stats/realtime`| Get unit occupancy aggregates | Valid JWT |
+| `GET` | `/api/v1/beds` | List all beds with current status | JWT (RLS enforced) |
+| `GET` | `/api/v1/beds/:unitId` | Beds for specific health unit | JWT (RLS) |
+| `POST` | `/api/v1/beds` | Create new bed | Admin JWT |
+| `PATCH`| `/api/v1/beds/:id` | Update bed status / `blocked_reason` | Staff/Admin JWT |
+| `DELETE` | `/api/v1/beds/:id` | Remove bed from unit | Admin JWT only |
+| `GET` | `/api/v1/beds/stats/realtime`| Get unit occupancy aggregates | Any JWT |
 
 *Note: All realtime updates are delivered via WebSockets over `supabase.channel('beds')`.*
 
@@ -45,8 +47,12 @@ Marks consultation as complete and updates the Redis moving average window.
 { "action": "complete" }
 ```
 **Response (200 OK):**
+### `PATCH /api/v1/queue/:entryId/miss`
+Marks turn as missed; applies penalty re-queue logic.
+**Request Body:** None
+**Response (200 OK):**
 ```json
-{ "status": "success", "new_dept_avg_seconds": 645 }
+{ "status": "success", "new_position": 12 }
 ```
 
 ## 3. Fast API Machine Learning Endpoints

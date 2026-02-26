@@ -24,16 +24,16 @@
 - Clicking a green bed cell opens an Admission Modal.
 - Staff can search for existing patients or create new ones, filling diagnosis and exam details.
 - Submitting the admission updates the bed status to `occupied` transactionally.
-- An audit log is automatically generated via PostgreSQL trigger.
-- If occupancy exceeds 85%, a PostgreSQL function triggers a webhook to Novu to send an admin alert.
+- An audit log is automatically generated via a `log_bed_changes()` PostgreSQL trigger on updates.
+- If occupancy exceeds 85%, a `check_occupancy_threshold()` PostgreSQL function triggers a webhook to Novu to send an admin alert.
 
 ### 2.2 Standard Operating Procedures (SOP) Assistance
 **User Story:** As a Nurse, I want to ask an AI assistant about hospital protocols during high-stress situations (like ICU overflow), so I can quickly follow the correct procedure.
 **Acceptance Criteria:**
-- An AI chat widget is available in the staff dashboard.
-- Staff can ask questions like "ICU overflow protocol?".
-- LangChain + pgvector + LLM processes the query and returns a grounded answer.
-- The answer must include specific citations from uploaded SOPs to prevent hallucinations.
+- An AI chat widget (floating button) is available in the staff dashboard.
+- Staff can ask questions like "Protocol for ICU bed overflow?".
+- A LangChain + pgvector + FastAPI pipeline processes the query, performs similarity search, and passes context to an Ollama (LLaMA3) model.
+- The answer must be grounded, strictly using specific citations from uploaded SOPs to prevent hallucinations, returning "not found" if out of context.
 
 ## 3. Hospital Admin Stories
 
@@ -43,8 +43,8 @@
 - The admin dashboard provides aggregated statistics (beds free/occupied %, avg wait times) visualized via ECharts.
 - The admin can view real-time maps of all units within their hospital.
 - If any unit drops below 15% available beds, an in-app toast and email alert is sent via Novu.
-- Admins have access to upload new SOP PDF documents, which are processed and chunked into the Supabase pgvector database for RAG.
-- Admins can export a daily bed report as a PDF using `@react-pdf/renderer`.
+- Admins have access to an interface to upload new SOP PDF documents, which are processed via a `/rag/ingest` endpoint and chunked into the Supabase pgvector database for RAG.
+- (Post-MVP) Admins can export a daily bed report as a PDF.
 
 ## 4. State Admin Stories
 
@@ -66,5 +66,5 @@
 - The doctor can click "Call Next" which updates `queue_entry.started_at` in Supabase.
 - When the doctor clicks "Complete", `ended_at` is updated.
 - The completion triggers a Redis Moving Average update, and Supabase Realtime broadcasts updated time estimates to all waiting patients.
-- The doctor can mark a patient as "Missed", moving them back with a penalty.
-- The doctor has access to a 2-hour projected queue load chart (FastAPI prediction).
+- The doctor can mark a patient as "Missed" (`missed=true`), moving them back with a penalty position.
+- The doctor has access to a hybrid wait time prediction blending ML predictions from the FastAPI service with the Redis moving average.
